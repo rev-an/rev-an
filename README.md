@@ -1,5 +1,10 @@
 ## Hi there 👋
+This is an music genre classification project.
 
+It aims to identify the genre of a music file.
+
+I used google colab in order to complete it. I used a given genres.tar file having 10 different genre and 100 of music files within it. the technique i used is as follows:
+converting those files into melspectrogram and preprocess those images. Then, using a sequential model and train 80% of the images. As the dataset is small i use adam as an optimizer.
 <!--
 **rev-an/rev-an** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
