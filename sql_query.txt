@@ -1,0 +1,163 @@
+SELECT *
+  FROM [Tenant].[project_schema].[addresses]
+
+SELECT *
+  FROM [Tenant].[project_schema].[referrals]
+
+SELECT *
+  FROM [Tenant].[project_schema].[Profiles]
+
+  SELECT *
+  FROM [Tenant].[project_schema].[employment_details]
+
+SELECT *
+  FROM [Tenant].[project_schema].[houses]
+
+SELECT *
+  FROM [Tenant].[project_schema].[tenancy_histories]
+
+update project_schema.tenancy_histories
+set move_out_date = try_cast(move_out_date as date)
+
+
+
+question no.1:
+
+SELECT top 1
+    t.profile_id AS Profile_ID,
+    concat(t.first_name ,' ',t.last_name ) AS Full_Name,
+    t.phone AS Contact_Number
+FROM
+   project_schema.Profiles t
+JOIN
+    project_schema.tenancy_histories l ON t.profile_id = l.profile_id
+WHERE
+    l.move_out_date IS NOT NULL  
+ORDER BY
+    DATEDIFF(DAY, l.move_in_date, l.move_out_date) DESC  
+
+
+question no.2:
+
+SELECT 
+    concat(t.first_name ,' ',t.last_name ) AS Full_Name,
+    t.email as email_id,
+	t.phone AS Contact_Number
+FROM
+   project_schema.Profiles t
+JOIN
+    project_schema.tenancy_histories l ON t.profile_id = l.profile_id
+WHERE
+    t.marital_status='Y' 
+	and	t.profile_id in (
+	SELECT l.profile_id
+        FROM project_schema.tenancy_histories l
+        WHERE l.rent > 9000)
+
+
+question no.3:
+
+SELECT 
+    t.profile_id,
+    CONCAT(t.first_name, ' ', t.last_name) AS full_name,
+    t.phone,
+    t.email,
+    t.city,
+    l.house_id,
+    l.move_in_date,
+    l.move_out_date,
+    l.rent,
+    (SELECT COUNT(*) FROM project_schema.referrals f WHERE f.referrer_id = t.profile_id) AS total_referrals,
+    e.latest_employer,
+    e.occupational_category
+FROM 
+    project_schema.Profiles t
+JOIN 
+    project_schema.tenancy_histories l ON t.profile_id = l.profile_id
+JOIN 
+    project_schema.employment_details e ON t.profile_id = e.profile_id
+WHERE 
+    (t.city = 'Bangalore' OR t.city = 'Pune')
+    AND l.move_in_date >= '2015-01-01'
+    AND l.move_out_date <= '2016-01-31'
+ORDER BY 
+    l.rent DESC
+
+
+question no.4:
+
+SELECT 
+    CONCAT(t.first_name, ' ', t.last_name) AS full_name,
+    t.email,
+    t.phone,
+    t.referral_code,
+    COUNT(r.referrer_id) AS total_referrals,
+    COUNT(CASE WHEN r.referral_valid = 1 THEN 1 END) * 100 AS total_bonus
+FROM 
+    project_schema.Profiles t
+JOIN 
+    project_schema.referrals r ON t.profile_id = r.referrer_id
+GROUP BY 
+    t.profile_id, t.first_name, t.last_name, t.email, t.phone, t.referral_code
+HAVING 
+    COUNT(r.referrer_id) > 1
+
+
+question no.5:
+
+SELECT 
+    t.city,
+    SUM(l.rent) AS total_rent_from_city
+FROM 
+	project_schema.tenancy_histories l
+join 
+	project_schema.Profiles t on l.profile_id= t.profile_id
+GROUP BY 
+    t.city
+UNION ALL
+SELECT 
+    'Total' AS city, 
+    SUM(l.rent) AS total_rent_from_city
+FROM 
+    project_schema.tenancy_histories l
+
+
+question no.10:
+
+select top 1 house_id,house_type,bhk_details,bed_count,beds_vacant,(bed_count - beds_vacant) AS bed_occupied,furnishing_type
+from project_schema.houses
+order by bed_occupied desc
+
+
+question no.6:
+
+CREATE VIEW vw_tenant AS
+SELECT t.profile_id,
+       t.city,
+       l.rent, 
+       l.move_in_date, 
+       h.house_type, 
+       h.beds_vacant, 
+       a.description
+FROM project_schema.Profiles t
+JOIN project_schema.tenancy_histories l ON t.profile_id=l.profile_id
+JOIN project_schema.houses h ON h.house_id = l.house_id
+JOIN project_schema.addresses a ON h.house_id=a.house_id
+WHERE l.move_in_date >= '2015-04-30'
+  AND h.beds_vacant > 0
+
+
+question no.7:
+
+select
+	concat(t.first_name,' ' , t.last_name) as full_name,
+	t.phone as contact,
+	t.city,
+	h.house_type,
+	h.bhk_details,
+	h.furnishing_type
+from project_schema.Profiles t
+join project_schema.tenancy_histories l on t.profile_id=l.profile_id
+join project_schema.houses h on h.house_id= l.house_id
+left join project_schema.referrals r on t.profile_id=r.referrer_id
+where r.referrer_id is null
