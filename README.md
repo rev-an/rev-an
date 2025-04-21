@@ -3,7 +3,7 @@ There is some AI project out there in this repository like music genre classific
 
 It aims to create model which predicts the desired outcome.
 
-I used google colaboration.
+I used google colaboration to make AI & ML models and for SQL, SSMS is used.
 
 <!--
 **rev-an/rev-an** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
