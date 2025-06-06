@@ -1,7 +1,7 @@
 ## Hi there 👋
 There is some AI and data visualization project out there in this repository like music genre classification, image captioning, SQL query.
 
-It aims to create model which predicts the desired outcome.
+It aims to create predictive model with the help of some open source data like flickr8k dataset or genres.tz dataset etc
 
 I used google colaboration to make AI & ML models and for SQL, SSMS is used.
 
