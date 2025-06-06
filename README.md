@@ -1,5 +1,5 @@
 ## Hi there 👋
-There is some AI project out there in this repository like music genre classification, image captioning, SQL query.
+There is some AI and data visualization project out there in this repository like music genre classification, image captioning, SQL query.
 
 It aims to create model which predicts the desired outcome.
 
