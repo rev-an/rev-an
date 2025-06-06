@@ -21,7 +21,7 @@ set move_out_date = try_cast(move_out_date as date)
 
 
 
-question no.1:
+question no.1:Write a query to get Profile ID, Full Name and Contact Number of the tenant who has stayed with us for the longest time period in the past.
 
 SELECT top 1
     t.profile_id AS Profile_ID,
@@ -37,7 +37,8 @@ ORDER BY
     DATEDIFF(DAY, l.move_in_date, l.move_out_date) DESC  
 
 
-question no.2:
+question no.2: Write a query to get the Full name, email id, phone of tenants who are married and paying rent > 9000 using subqueries
+
 
 SELECT 
     concat(t.first_name ,' ',t.last_name ) AS Full_Name,
@@ -55,7 +56,8 @@ WHERE
         WHERE l.rent > 9000)
 
 
-question no.3:
+question no.3: Write a query to display profile id, full name, phone, email id, city, house id, move_in_date ,move_out date, rent, total number of referrals made, latest employer and the occupational category of all the tenants living in Bangalore or Pune in the time period of jan 2015 to jan 2016 sorted by their rent in descending order
+
 
 SELECT 
     t.profile_id,
@@ -84,7 +86,10 @@ ORDER BY
     l.rent DESC
 
 
-question no.4:
+question no.4: Write a sql snippet to find the full_name, email_id, phone number and referral code of all the tenants who have referred more than once.
+Also find the total bonus amount they should receive given that the bonus gets calculated
+only for valid referrals.
+
 
 SELECT 
     CONCAT(t.first_name, ' ', t.last_name) AS full_name,
@@ -103,7 +108,7 @@ HAVING
     COUNT(r.referrer_id) > 1
 
 
-question no.5:
+question no.5: Write a query to find the rent generated from each city and also the total of all cities.
 
 SELECT 
     t.city,
@@ -122,14 +127,15 @@ FROM
     project_schema.tenancy_histories l
 
 
-question no.10:
+question no.10: Write a query to get the house details of the house having highest occupancy
 
 select top 1 house_id,house_type,bhk_details,bed_count,beds_vacant,(bed_count - beds_vacant) AS bed_occupied,furnishing_type
 from project_schema.houses
 order by bed_occupied desc
 
 
-question no.6:
+question no.6: Create a view 'vw_tenant' find profile_id,rent,move_in_date,house_type,beds_vacant,description and city of tenants who
+shifted on/after 30th april 2015 and are living in houses having vacant beds and its address.
 
 CREATE VIEW vw_tenant AS
 SELECT t.profile_id,
@@ -147,7 +153,7 @@ WHERE l.move_in_date >= '2015-04-30'
   AND h.beds_vacant > 0
 
 
-question no.7:
+question no.7: Write a code to extend the valid_till date for a month of tenants who have referred more than one time
 
 select
 	concat(t.first_name,' ' , t.last_name) as full_name,
